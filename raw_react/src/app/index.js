@@ -1,104 +1,61 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import contacts from './people'
+import contacts from './people';
+import ContactsView from './ContactsView';
 
-let div = React.createFactory('div');
+let state = {};
 
-let ContactItem = React.createClass({
-    propTypes: {
-        // id: React.PropTypes.number.isRequired,
-        name: React.PropTypes.string.isRequired,
-        email: React.PropTypes.string.isRequired
+setState({
+    newContact: {
+        name: '',
+        email: '',
+        description: ''
     },
-    render: function () {
-        return (
-            React.createElement('li', {
-                className: 'contact-list-item'
-            },
-                React.createElement('h3', {}, this.props.name),
-                React.createElement('h4', {}, this.props.description),
-                React.createElement('a', {
-                    href: 'mailto:' + this.props.email
-                }, this.props.email)
-            )
-        )
-    }
+    list: contacts,
+    gender: 'Female'
 });
 
-let Contacts = React.createClass({
-    propTypes: {
-        contacts: React.PropTypes.array.isRequired,
-        gender: React.PropTypes.string,
-        newContact: React.PropTypes.object.isRequired
-    },
-    render: function () {
-        let contactsList = this.props.contacts
-            .filter(function (contact) {
-                return !this.props.gender || (contact.gender === this.props.gender);
-            }.bind(this))
-            .map(function (contact) {
-                return React.createElement(ContactItem, contact);
-            });
-
-        return (
-            div({},
-                React.createElement('h1', {}, "Contacts"),
-                React.createElement('ul', {}, contactsList)
-            )
-        )
-    }
-})
-
-let ContactForm = React.createClass({
-    propTypes: {
-        contact: React.PropTypes.object.isRequired
-    },
-    render: function () {
-        return (
-            div({
-                className: 'contact-form'
-            },
-                React.createElement('input', {
-                    value: this.props.contact.name,
-                    type: 'text'
-                }),
-                React.createElement('input', {
-                    value: this.props.contact.email,
-                    type: 'email'
-                }),
-                React.createElement('textarea', {
-                    value: this.props.contact.description
-                }),
-                React.createElement('input', {
-                    type: 'submit'
-                })
-            )
-        )
-    }
-});
-
-let newContact = {
+const CONTACT_TEMPLATE = {
     name: '',
     email: '',
     description: ''
 };
 
-let rootElement =
-    div({
-        className: 'contacts'
-    },
-        React.createElement(Contacts, {
-            gender: 'Female',
-            contacts: contacts,
-            newContact: newContact
-        }),
-        React.createElement('hr'),
-        React.createElement(ContactForm, {
-            contact: newContact
-        })
-    );
+function setState(newState) {
+    Object.assign(state, newState);
 
-ReactDOM.render(
-    rootElement,
-    document.getElementById('react-app')
-);
+    ReactDOM.render(
+        React.createElement(ContactsView, Object.assign({}, state, {
+            onChange: (newContact) => {
+                setState({
+                    newContact: newContact
+                });
+            },
+            onSubmit: () => {
+                let contact = Object.assign({}, state.newContact, { key: state.list.length + 1, errors: {} });
+
+                if (!/.+@.+\..+/.test(contact.email)) {
+                    contact.errors.email = ['Please enter your new contact\'s email'];
+                }
+
+                if (contact.name.length < 3) {
+                    contact.errors.name = ['Name has to be longer'];
+                }
+
+                if (contact.errors.name || contact.errors.email) {
+                    setState({
+                        newContact: contact
+                    });
+
+                    return;
+                }
+
+                setState({
+                    newContact: Object.assign({}, CONTACT_TEMPLATE),
+                    list: [...state.list, contact]
+                });
+            }
+        })),
+        document.getElementById('react-app')
+    );
+}

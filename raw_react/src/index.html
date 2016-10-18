@@ -15,7 +15,24 @@
 			padding: 15px
 		}
 		
-		.contact-list-item {}
+		.contact-list {
+			padding: 0;
+		}
+		
+		.contact-list-item {
+			list-style: none;
+			padding: 15px;
+			border: solid 1px #666;
+		}
+		
+		.contact-list-item:not(:last-child) {
+			border-bottom: none;
+		}
+		
+		.contact-list-item:nth-child(even) {
+			background-color: #ddd;
+			list-style: none;
+		}
 		
 		.contact-form {
 			padding: 15px
@@ -24,6 +41,10 @@
 		.contact-form input {
 			display: block;
 			margin-bottom: 15px;
+		}
+		
+		.has-error {
+			border: solid 1px red;
 		}
 	</style>
 
