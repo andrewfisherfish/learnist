@@ -10,11 +10,11 @@ let ContactItem = React.createClass({
         name: React.PropTypes.string.isRequired,
         email: React.PropTypes.string.isRequired
     },
-    render: function() {
+    render: function () {
         return (
             React.createElement('li', {
-                    className: 'contact-list-item'
-                },
+                className: 'contact-list-item'
+            },
                 React.createElement('h3', {}, this.props.name),
                 React.createElement('h4', {}, this.props.description),
                 React.createElement('a', {
@@ -31,12 +31,12 @@ let Contacts = React.createClass({
         gender: React.PropTypes.string,
         newContact: React.PropTypes.object.isRequired
     },
-    render: function() {
+    render: function () {
         let contactsList = this.props.contacts
-            .filter(function(contact) {
+            .filter(function (contact) {
                 return !this.props.gender || (contact.gender === this.props.gender);
             }.bind(this))
-            .map(function(contact) {
+            .map(function (contact) {
                 return React.createElement(ContactItem, contact);
             });
 
@@ -53,11 +53,11 @@ let ContactForm = React.createClass({
     propTypes: {
         contact: React.PropTypes.object.isRequired
     },
-    render: function() {
+    render: function () {
         return (
             div({
-                    className: 'contact-form'
-                },
+                className: 'contact-form'
+            },
                 React.createElement('input', {
                     value: this.props.contact.name,
                     type: 'text'
@@ -85,8 +85,8 @@ let newContact = {
 
 let rootElement =
     div({
-            className: 'contacts'
-        },
+        className: 'contacts'
+    },
         React.createElement(Contacts, {
             gender: 'Female',
             contacts: contacts,

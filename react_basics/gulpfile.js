@@ -4,7 +4,7 @@ var connect = require('gulp-connect');
 var livereload = require('gulp-livereload');
 var plumber = require('gulp-plumber');
 
-gulp.task('scripts', function() {
+gulp.task('scripts', function () {
     return gulp.src('./src/app/index.js')
         .pipe(plumber())
         .pipe(webpack(require('./webpack.config.js')))
@@ -12,14 +12,14 @@ gulp.task('scripts', function() {
         .pipe(livereload());
 })
 
-gulp.task('html', function() {
+gulp.task('html', function () {
     return gulp.src('./src/**/*.html')
         .pipe(plumber())
         .pipe(gulp.dest('./build'))
         .pipe(livereload());
 })
 
-gulp.task('server', function() {
+gulp.task('server', function () {
     connect.server({
         name: 'VIP Server',
         root: ['./build'],
@@ -28,11 +28,11 @@ gulp.task('server', function() {
     });
 })
 
-gulp.task('livereload', function() {
+gulp.task('livereload', function () {
     livereload.listen();
 })
 
-gulp.task('default', ['server', 'livereload', 'scripts', 'html'], function() {
+gulp.task('default', ['server', 'livereload', 'scripts', 'html'], function () {
     gulp.watch('./src/**/*.js', ['scripts'])
     gulp.watch('./src/**/*.html', ['html'])
 })
